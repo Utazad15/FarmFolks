@@ -38,7 +38,7 @@ let cow1Img,cow2Img;
 let man1,man1Img;
 let man2,man2Img;
 let man3,man3Img;
-let map2,map2Img;
+let map2,map2Img,map3Img,map4Img,map5Img,map6Img;
 let play1;
 let board,boardImg;
 let board2;
@@ -57,6 +57,9 @@ let array5 = [];
 let c1,c2,c3;
 let l18Img,l19Img;
 let endImg;
+let buy,buyImg;
+let sell,sellImg;
+let r1,r2,r3,r4,r5,r6,r7,r8,r9,r10;
 
 function preload(){
   bg = loadImage("assets/Map.png");
@@ -86,7 +89,7 @@ function preload(){
   man1Img = loadImage("assets/man1.png");
   man2Img = loadImage("assets/man2.png");
   man3Img = loadImage("assets/man3.png");
-  map2Img = loadImage("assets/Map2.png");
+  map2Img = loadAnimation("assets/Map2.png");
   boardImg = loadImage("assets/board.png");
   nextImg = loadImage("assets/next.png");
   l1Img = loadImage("assets/l1.png");
@@ -100,6 +103,12 @@ function preload(){
   c2 = loadAnimation("assets/carrot2.png");
   c3 = loadAnimation("assets/carrot3.png");
   endImg = loadImage("assets/end.png");
+  buyImg = loadImage("assets/buy.png");
+  sellImg = loadImage("assets/sell.png");
+  map3Img = loadAnimation("assets/Map3.png");
+  map4Img = loadAnimation("assets/Map4.png");
+  map5Img = loadAnimation("assets/Map5.png");
+  map6Img = loadAnimation("assets/Map6.png");
 }
 
 function setup(){
@@ -469,8 +478,21 @@ function setup(){
   next.addImage(nextImg);
   next.visible = false;
 
+  buy = createSprite(835,505,50,50);
+  buy.addImage(buyImg);
+  buy.visible = false;
+
+  sell = createSprite(875,505,50,50);
+  sell.addImage(sellImg);
+  sell.visible = false;
+  sell.scale = 0.6;
+
   map2 = createSprite(650,315,50,50);
-  map2.addImage(map2Img);
+  map2.addAnimation("map",map2Img);
+  map2.addAnimation("map1",map3Img);
+  map2.addAnimation("map2",map4Img);
+  map2.addAnimation("map3",map5Img);
+  map2.addAnimation("map4",map6Img);
   map2.scale = 0.46;
 
   l16 = createSprite(-800,390,25,10);
@@ -514,9 +536,15 @@ function setup(){
   
   drawSprites();
 
+  if(mouseIsPressed){
+    noCursor();
+  }else {
+    cursor(CROSS);
+  }
+
   if(gameState === 1){
 
-    if(mousePressedOver(play)){
+    if(mousePressedOver(play) || keyDown("q")){
       console.log("clicked");
       gameState = 2;
     }
@@ -557,8 +585,8 @@ function setup(){
   fill(rgb(178, 0, 127));
   textSize(25);
   text("1. WASD/ARROW keys to move.",45,370);
-  text("2. Hold 'M' to see map.",600,370);
-  text("3. Hold 'T' to see tasks.",45,420);
+  text("2. Press & Hold 'M' to see map.",600,370);
+  text("3. Press & Hold 'T' to see tasks.",45,420);
 
   textSize(25);
   fill("darkGreen");
@@ -574,7 +602,7 @@ function setup(){
     array4[n].visible = true;
   }
 
-  if(mousePressedOver(play1)){
+  if(mousePressedOver(play1) || keyDown("q")){
     console.log("clicked");
     gameState = 3;
   }
@@ -596,8 +624,9 @@ function setup(){
   clocks();
 
   fill(rgb(3,0,45));
-  textSize(35);
-  text("Hold 'T' to see tasks",10,625);
+  textSize(25);
+  text("Press & Hold 'M' to see Map and route.",10,600);
+  text("Press & Hold 'T' to see tasks.",10,625);
 
   if(keyDown("T")){
     board.visible = true;
@@ -743,7 +772,7 @@ function setup(){
   }
 
   textSize(20);
-  text("Hold 'M' to see map , and go to Plant shop.",890,600);
+  text("Press & Hold Hold 'M' to see map , and go to Plant shop.",890,600);
   text("there is a man and buy seeds from it",890,620)
   //text("After feeding it shows green rect, means cow is feeded",890,620);
 
@@ -757,15 +786,15 @@ function setup(){
     text("Ok i'll give you it costs $25.",400,410);
     text("Ok i'll pay,thankyou.",400,450);
     text("welcome.",400,490);
-    next.visible = true;
+    buy.visible = true;
 
-    if(mousePressedOver(next)){
+    if(mousePressedOver(buy)){
      task.visible = true;
      gameState = 4;
     }
   }else{
     board2.visible = false;
-    next.visible = false;
+    buy.visible = false;
   }
 
 }else if(gameState === 4){
@@ -782,12 +811,13 @@ function setup(){
 
    clocks();
    
-   next.visible = false;
+   buy.visible = false;
    board2.visible = false;
 
    fill(rgb(3,0,45));
-   textSize(35);
-   text("Hold 'T' to see tasks",10,625);
+   textSize(25);
+   text("Press & Hold 'M' to see Map and route.",10,600);
+   text("Press & Hold 'T' to see tasks.",10,625);
  
    if(keyDown("T")){
      board.visible = true;
@@ -841,6 +871,7 @@ function setup(){
   }
  
    if(keyDown("M")){
+     map2.changeAnimation("map1",map3Img);
      map2.visible = true;
      task.visible = false;
    }
@@ -853,6 +884,7 @@ function setup(){
   if(keyDown("down") || keyDown("s")){
     changeAnimation(sam,"samStand2",sam2);
     changePosition(0,10,sam);
+    task.visible = false;
    }
    
    if(keyWentUp("down") || keyWentUp("s")){
@@ -863,6 +895,7 @@ function setup(){
    if(keyDown("up") || keyDown("w")){
      changeAnimation(sam,"samStand4",sam4);
      changePosition(0,-10,sam);
+     task.visible = false;
    }
    
    if(keyWentUp("up") || keyWentUp("w")){
@@ -873,6 +906,7 @@ function setup(){
    if(keyDown("right") || keyDown("d")){
      changeAnimation(sam,"samStand6",sam6);
      changePosition(10,0,sam);
+     task.visible = false;
    }
    
    if(keyWentUp("right") || keyWentUp("d")){
@@ -883,6 +917,7 @@ function setup(){
    if(keyDown("left") || keyDown("a")){
      changeAnimation(sam,"samStand8",sam8);
      changePosition(-10,0,sam);
+     task.visible = false;
    }
    
    if(keyWentUp("left") || keyWentUp("a")){
@@ -895,7 +930,6 @@ function setup(){
      if(keyDown("left") || keyDown("a")){
        sam.changeAnimation("samStand8",sam8);
        a.x = a.x+10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].x = array[i].x + 10;
@@ -908,7 +942,6 @@ function setup(){
      if(keyDown("up") || keyDown("w")){
        sam.changeAnimation("samStand4",sam4);
        a.y = a.y+10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].y = array[i].y + 10;
@@ -921,7 +954,6 @@ function setup(){
      if(keyDown("right") || keyDown("d")){
        sam.changeAnimation("samStand6",sam6);
        a.x = a.x-10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].x = array[i].x - 10;
@@ -934,7 +966,6 @@ function setup(){
      if(keyDown("down") || keyDown("s")){
        sam.changeAnimation("samStand2",sam2);
        a.y = a.y-10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].y = array[i].y - 10;
@@ -1128,8 +1159,9 @@ function setup(){
    board2.visible = false;
 
    fill(rgb(3,0,45));
-   textSize(35);
-   text("Hold 'T' to see tasks",10,625);
+   textSize(25);
+   text("Press & Hold 'M' to see Map and route.",10,600);
+   text("Press & Hold 'T' to see tasks.",10,625);
 
    textSize(20);
    text("Touch cow1 and press 'F' to feed and then cow2 .",890,580);
@@ -1189,6 +1221,7 @@ function setup(){
   }
 
    if(keyDown("M")){
+     map2.changeAnimation("map2",map4Img);
      map2.visible = true;
      task.visible = false;
    }
@@ -1201,6 +1234,7 @@ function setup(){
   if(keyDown("down") || keyDown("s")){
     changeAnimation(sam,"samStand2",sam2);
     changePosition(0,10,sam);
+    task.visible = false;
    }
    
    if(keyWentUp("down") || keyWentUp("s")){
@@ -1211,6 +1245,7 @@ function setup(){
    if(keyDown("up") || keyDown("w")){
      changeAnimation(sam,"samStand4",sam4);
      changePosition(0,-10,sam);
+     task.visible = false;
    }
    
    if(keyWentUp("up") || keyWentUp("w")){
@@ -1221,6 +1256,7 @@ function setup(){
    if(keyDown("right") || keyDown("d")){
      changeAnimation(sam,"samStand6",sam6);
      changePosition(10,0,sam);
+     task.visible = false;
    }
    
    if(keyWentUp("right") || keyWentUp("d")){
@@ -1231,6 +1267,7 @@ function setup(){
    if(keyDown("left") || keyDown("a")){
      changeAnimation(sam,"samStand8",sam8);
      changePosition(-10,0,sam);
+     task.visible = false;
    }
    
    if(keyWentUp("left") || keyWentUp("a")){
@@ -1243,7 +1280,6 @@ function setup(){
      if(keyDown("left") || keyDown("a")){
        sam.changeAnimation("samStand8",sam8);
        a.x = a.x+10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].x = array[i].x + 10;
@@ -1257,7 +1293,6 @@ function setup(){
      if(keyDown("up") || keyDown("w")){
        sam.changeAnimation("samStand4",sam4);
        a.y = a.y+10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].y = array[i].y + 10;
@@ -1271,7 +1306,6 @@ function setup(){
      if(keyDown("right") || keyDown("d")){
        sam.changeAnimation("samStand6",sam6);
        a.x = a.x-10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].x = array[i].x - 10;
@@ -1285,7 +1319,6 @@ function setup(){
      if(keyDown("down") || keyDown("s")){
        sam.changeAnimation("samStand2",sam2);
        a.y = a.y-10;
-       task.visible = false;
        
        for(var i = 0;i<array.length;i++){
          array[i].y = array[i].y - 10;
@@ -1353,8 +1386,9 @@ function setup(){
  // text("After feeding it shows green rect, means cow is feeded",890,620);
 
   fill(rgb(3,0,45));
-  textSize(35);
-  text("Hold 'T' to see tasks",10,625);
+  textSize(25);
+  text("Press & Hold 'M' to see Map and route.",10,600);
+  text("Press & Hold 'T' to see tasks.",10,625);
 
   if(keyDown("T")){
     board.visible = true;
@@ -1410,6 +1444,7 @@ function setup(){
  }
 
   if(keyDown("M")){
+    map2.changeAnimation("map3",map5Img);
     map2.visible = true;
     task.visible = false;
   }
@@ -1422,6 +1457,7 @@ function setup(){
  if(keyDown("down") || keyDown("s")){
    changeAnimation(sam,"samStand2",sam2);
    changePosition(0,10,sam);
+   task.visible = false;
   }
   
   if(keyWentUp("down") || keyWentUp("s")){
@@ -1432,6 +1468,7 @@ function setup(){
   if(keyDown("up") || keyDown("w")){
     changeAnimation(sam,"samStand4",sam4);
     changePosition(0,-10,sam);
+    task.visible = false;
   }
   
   if(keyWentUp("up") || keyWentUp("w")){
@@ -1442,6 +1479,7 @@ function setup(){
   if(keyDown("right") || keyDown("d")){
     changeAnimation(sam,"samStand6",sam6);
     changePosition(10,0,sam);
+    task.visible = false;
   }
   
   if(keyWentUp("right") || keyWentUp("d")){
@@ -1452,6 +1490,7 @@ function setup(){
   if(keyDown("left") || keyDown("a")){
     changeAnimation(sam,"samStand8",sam8);
     changePosition(-10,0,sam);
+    task.visible = false;
   }
   
   if(keyWentUp("left") || keyWentUp("a")){
@@ -1525,15 +1564,15 @@ function setup(){
     text("Ok i'll give you it costs $63.",400,410);
     text("Thankyou,bye.",400,450);
     text("welcome.",400,490);
-    next.visible = true;
+    buy.visible = true;
    
-    if(mousePressedOver(next)){
+    if(mousePressedOver(buy)){
      task.visible = true;
      gameState = 7;
     }
    }else{
     board2.visible = false;
-    next.visible = false;
+    buy.visible = false;
     task.visible = false;
    }
  }else if(gameState === 7){
@@ -1567,7 +1606,7 @@ function setup(){
 
   clocks();
   
-  next.visible = false;
+  buy.visible = false;  
   board2.visible = false;
 
   textSize(20);
@@ -1576,8 +1615,9 @@ function setup(){
   text("Go to general shop and sell the milk and carrots",885,620);
 
   fill(rgb(3,0,45));
-  textSize(35);
-  text("Hold 'T' to see tasks",10,625);
+  textSize(25);
+  text("Press & Hold 'M' to see Map and route.",10,600);
+  text("Press & Hold 'T' to see tasks.",10,625);
 
   if(keyDown("T")){
     board.visible = true;
@@ -1634,6 +1674,7 @@ function setup(){
  }
 
   if(keyDown("M")){
+    map2.changeAnimation("map4",map6Img);
     map2.visible = true;
     task.visible = false;
   }
@@ -1646,6 +1687,7 @@ function setup(){
  if(keyDown("down") || keyDown("s")){
    changeAnimation(sam,"samStand2",sam2);
    changePosition(0,10,sam);
+   task.visible = false;
   }
   
   if(keyWentUp("down") || keyWentUp("s")){
@@ -1656,6 +1698,7 @@ function setup(){
   if(keyDown("up") || keyDown("w")){
     changeAnimation(sam,"samStand4",sam4);
     changePosition(0,-10,sam);
+    task.visible = false;
   }
   
   if(keyWentUp("up") || keyWentUp("w")){
@@ -1666,6 +1709,7 @@ function setup(){
   if(keyDown("right") || keyDown("d")){
     changeAnimation(sam,"samStand6",sam6);
     changePosition(10,0,sam);
+    task.visible = false;
   }
   
   if(keyWentUp("right") || keyWentUp("d")){
@@ -1676,6 +1720,7 @@ function setup(){
   if(keyDown("left") || keyDown("a")){
     changeAnimation(sam,"samStand8",sam8);
     changePosition(-10,0,sam);
+    task.visible = false;
   }
   
   if(keyWentUp("left") || keyWentUp("a")){
@@ -1688,7 +1733,6 @@ function setup(){
     if(keyDown("left") || keyDown("a")){
       sam.changeAnimation("samStand8",sam8);
       a.x = a.x+10;
-      task.visible = false;
       
       for(var i = 0;i<array.length;i++){
         array[i].x = array[i].x + 10;
@@ -1702,7 +1746,6 @@ function setup(){
     if(keyDown("up") || keyDown("w")){
       sam.changeAnimation("samStand4",sam4);
       a.y = a.y+10;
-      task.visible = false;
       
       for(var i = 0;i<array.length;i++){
         array[i].y = array[i].y + 10;
@@ -1716,7 +1759,6 @@ function setup(){
     if(keyDown("right") || keyDown("d")){
       sam.changeAnimation("samStand6",sam6);
       a.x = a.x-10;
-      task.visible = false;
       
       for(var i = 0;i<array.length;i++){
         array[i].x = array[i].x - 10;
@@ -1730,8 +1772,7 @@ function setup(){
     if(keyDown("down") || keyDown("s")){
       sam.changeAnimation("samStand2",sam2);
       a.y = a.y-10;
-      task.visible = false;
-      
+
       for(var i = 0;i<array.length;i++){
         array[i].y = array[i].y - 10;
       }
@@ -1837,18 +1878,20 @@ function setup(){
 
  if(sam.isTouching(man2)){
    board2.visible = true;
-   next.visible = true;
+   sell.visible = true;
    textSize(25);
    textFont("monospace");
    text("Hello i want to sell milk and carrots",400,290);
    text("Ok i'll give you $93",400,330);
 
-   if(mousePressedOver(next)){
+   if(mousePressedOver(sell)){
      board2.visible = false;
-     next.visible = false;
+     sell.visible = false;
      gameState = 8;
    }
- }
+ }else {
+  sell.visible = false;
+}
  }else if(gameState === 8){
   gold = 525;
 
@@ -1868,8 +1911,9 @@ function setup(){
   board2.visible = false;
 
   fill(rgb(3,0,45));
-  textSize(35);
-  text("Hold 'T' to see tasks",10,625);
+  textSize(25);
+  text("Press & Hold 'M' to see Map and routes.",10,600);
+  text("Press & Hold 'T' to see tasks.",10,625);
 
   if(keyDown("T")){
     board.visible = true;
@@ -2040,7 +2084,6 @@ function setup(){
   l20.addImage(endImg);
   l20.scale = 1.6;
   l20.velocityY = 30;
-
  } 
 }
 
